@@ -1,13 +1,15 @@
 CREATE TABLE Users (
 	id serial4 NOT NULL,
 	fio varchar(255),
-	birthdate date,
+	userLogin varchar(255),
+	userPassword varchar,
+ 	birthdate date,
 	sex boolean,
 	description varchar,
 	achievements varchar, --достижения
 	education varchar,
-	phoneNumber varchar(50),
 	email varchar(255),
+	resumeLink varchar(255),
 	CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 
