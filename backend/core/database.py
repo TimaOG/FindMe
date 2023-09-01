@@ -41,22 +41,30 @@ def db_check_user_in_system(data: LoginData):
     return [True, res[1]]
 
 
-def get_user_info(user_id: int):
+def db_get_user_info(user_id: int):
     cur = con.cursor()
-    cur.execute('''SELECT (fio, birthdate::text, description, achievements, education, email) FROM Users WHERE id=%s''',
+    cur.execute('''SELECT fio, birthdate::text, sex, description, achievements, education, email FROM Users WHERE id=%s''',
                 (user_id,))
     user_info = cur.fetchone()
     cur.execute('''SELECT t1.professionname FROM Profession t1 LEFT JOIN UserProfessionList t2 
                         ON t2.fkprofession = t1.id WHERE t2.fkuser = %s''', (user_id,))
-    user_prof_list = list(cur.fetchall())
+    user_prof_list = cur.fetchall()
     cur.execute(
         '''SELECT t1.hobbyname FROM Hobby t1 LEFT JOIN UserHobbyList t2 ON t2.fkhobby = t1.id WHERE t2.fkuser = %s''',
         (user_id,))
-    user_hobby_list = list(cur.fetchall())
+    user_hobby_list = cur.fetchall()
     print(user_info)
     print(user_prof_list)
     print(user_hobby_list)
     cur.close()
-    # user = UserResponse(fio=user_info)
+    user = UserResponse(fio=user_info[0], birthdate=user_info[1], sex=user_info[2], description=user_info[3], 
+                        achievements=user_info[4], education=user_info[5], email=user_info[6], 
+                        professionList=getListFromTuple(user_prof_list), hobbyList=getListFromTuple(user_hobby_list))
     # print(user)
-    return user_info
+    return user
+
+def getListFromTuple(tup):
+    res = []
+    for el in tup:
+        res.append(el[0])
+    return res

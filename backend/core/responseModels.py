@@ -7,12 +7,12 @@ class BaseResponse(BaseModel):
 
 class UserResponse(BaseModel):
     fio: str
-    birthdate: date
+    birthdate: str
     sex: bool
     description: str
     achievements: str
     education: str
-    phoneNumber: str
     email: str
     professionList: list[str] = []
     hobbyList: list[str] = []
+
