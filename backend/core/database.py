@@ -36,6 +36,7 @@ def db_check_user_in_system(data: LoginData):
     cur = con.cursor()
     cur.execute('''SELECT id, userPassword FROM Users WHERE email=%s''', (data.email, ))
     res = cur.fetchone()
+    cur.close()
     if res[0] == None:
         return [False, '']
     return [True, res[1]]
