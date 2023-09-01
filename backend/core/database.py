@@ -54,9 +54,6 @@ def db_get_user_info(user_id: int):
         '''SELECT t1.hobbyname FROM Hobby t1 LEFT JOIN UserHobbyList t2 ON t2.fkhobby = t1.id WHERE t2.fkuser = %s''',
         (user_id,))
     user_hobby_list = cur.fetchall()
-    print(user_info)
-    print(user_prof_list)
-    print(user_hobby_list)
     cur.close()
     user = UserResponse(fio=user_info[0], birthdate=user_info[1], sex=user_info[2], description=user_info[3], 
                         achievements=user_info[4], education=user_info[5], email=user_info[6], 
