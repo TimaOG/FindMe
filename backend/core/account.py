@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response, Request
 from core.responseModels import BaseResponse, UserResponse
 from core.requestsModels import LoginData
-from core.auth import verify_token
+from core.auth import verify_token, get_user_info
 router = APIRouter()
 
 @router.get("/account/getAccountInfo", response_model=UserResponse, tags=["Account"])
@@ -9,6 +9,7 @@ async def get_account_info(request: Request):
     decoded_data = verify_token(request.cookies.get('token'))
     if decoded_data is None:
         return {'header': 'Fail', 'msg': 'Access Denaid'}
+    user_info = get_user_info(decoded_data)
     return {'header': 'OK', 'msg': ''}
 
 @router.post("/account/saveAccountInfo", response_model=BaseResponse, tags=["Account"])
