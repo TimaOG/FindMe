@@ -36,6 +36,7 @@ def db_check_user_in_system(data: LoginData):
     cur = con.cursor()
     cur.execute('''SELECT id, userPassword FROM Users WHERE email=%s''', (data.email, ))
     res = cur.fetchone()
+    cur.close()
     if res[0] == None:
         return [False, '']
     return [True, res[1]]
@@ -43,7 +44,7 @@ def db_check_user_in_system(data: LoginData):
 
 def get_user_info(user_id: int):
     cur = con.cursor()
-    cur.execute('''SELECT (fio, birthdate::text, description, achievements, education, email) FROM Users WHERE id=%s''',
+    cur.execute('''SELECT fio, birthdate::text, description, achievements, education, email FROM Users WHERE id=%s''',
                 (user_id,))
     user_info = cur.fetchone()
     cur.execute('''SELECT t1.professionname FROM Profession t1 LEFT JOIN UserProfessionList t2 
