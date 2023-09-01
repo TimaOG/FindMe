@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from core.requestsModels import RegData, LoginData
 from core.responseModels import BaseResponse
-from core.database import db_create_user, db_check_user_in_system_by_email_and_login
+from core.database import db_create_user, db_check_user_in_system_by_email_and_login, db_check_user_in_system
 
 SECRET_KEY = "my_secret_key"
 ALGORITHM = "HS256"
@@ -48,11 +48,14 @@ async def register_user(data:RegData):
 
 @router.post("/login", response_model=BaseResponse, tags=["Auth"])
 async def login_user(request: Request, response: Response, data:LoginData):
-    #hashed_password = pwd_context.hash(gg)
-    # Сохраните пользователя в базе данных
+    checkData = db_check_user_in_system(data)
+    if not checkData[0]:
+        return {'header': 'Fail', 'msg': 'User does not exist'}
     jwt_token = create_token({"id": 1})
-    response.set_cookie(key="token", value=jwt_token)
-    return {'header': 'OK', 'msg': ''}
+    if pwd_context.verify(data.password, checkData[1]):
+        response.set_cookie(key="token", value=jwt_token)
+        return {'header': 'OK', 'msg': ''}
+    return {'header': 'Fail', 'msg': 'Password is wrong'}
 
 @router.get("/logout", response_model=BaseResponse, tags=["Auth"])
 async def logout_user(response: Response):
