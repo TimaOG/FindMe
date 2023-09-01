@@ -16,14 +16,10 @@ def db_create_user(data: RegData):
     con.commit()
     cur.close()
 
-def db_check_user_in_system(data: LoginData):
-    pass
-
 def db_check_user_in_system_by_email_and_login(email: str, login: str):
     cur = con.cursor()
     cur.execute('''SELECT id FROM Users WHERE email=%s''', (email, ))
     resEmail = cur.fetchone()
-    print(resEmail)
     cur.execute('''SELECT id FROM Users WHERE userLogin=%s''', (login, ))
     resLogin = cur.fetchone()
     cur.close()
@@ -32,3 +28,11 @@ def db_check_user_in_system_by_email_and_login(email: str, login: str):
     if resLogin != None:
         return [False, 'Login already exist']
     return [True, '']
+
+def db_check_user_in_system(data: LoginData):
+    cur = con.cursor()
+    cur.execute('''SELECT id, userPassword FROM Users WHERE email=%s''', (data.email, ))
+    res = cur.fetchone()
+    if res[0] == None:
+        return [False, '']
+    return [True, res[1]]
