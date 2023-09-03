@@ -9,7 +9,8 @@ CREATE TABLE Users (
 	achievements varchar, --достижения
 	education varchar,
 	email varchar(255),
-	resumeLink varchar(255),
+	avaLink varchar,
+	resumeLink varchar,
 	CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 

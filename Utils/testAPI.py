@@ -5,5 +5,6 @@ s = requests.Session()
 # print(gg.text)
 
 s.post('http://localhost:8000/login', json = {'email': 'gg@gg.ru', 'password': '123'})
-gg = s.get('http://localhost:8000/account/getAccountInfo')
+#gg = s.get('http://localhost:8000/account/getAccountInfo')
+gg = s.post('http://localhost:8000/account/saveAccountInfo', json={})
 print(gg.text)

@@ -3,7 +3,7 @@ import jwt
 from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from core.requestsModels import RegData, LoginData
+from core.requestsModels import RegDataRequest, LoginDataRequest
 from core.responseModels import BaseResponse
 from core.database import db_create_user, db_check_user_in_system_by_email_and_login, db_check_user_in_system
 
@@ -36,7 +36,7 @@ def verify_token(token: str):
 
 
 @router.post("/register", response_model=BaseResponse, tags=["Auth"])
-async def register_user(data:RegData):
+async def register_user(data:RegDataRequest):
     if(data.password != data.password2):
         return {'header': 'Fail', 'msg': 'Incorect password'}
     data.password = pwd_context.hash(data.password)
@@ -47,7 +47,7 @@ async def register_user(data:RegData):
     return {'header': 'OK', 'msg': 'Success'}
 
 @router.post("/login", response_model=BaseResponse, tags=["Auth"])
-async def login_user(request: Request, response: Response, data:LoginData):
+async def login_user(request: Request, response: Response, data:LoginDataRequest):
     checkData = db_check_user_in_system(data)
     if not checkData[0]:
         return {'header': 'Fail', 'msg': 'User does not exist'}

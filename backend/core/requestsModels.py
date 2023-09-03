@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime, date
 
 
-class RegData(BaseModel):
+class RegDataRequest(BaseModel):
     fio: str
     login: str
     password: str
@@ -11,6 +11,14 @@ class RegData(BaseModel):
     sex: bool
     birthdate: date
 
-class LoginData(BaseModel):
+class LoginDataRequest(BaseModel):
     email: str
     password: str
+
+class UserRequest(BaseModel):
+    description: str
+    achievements: str
+    education: str
+    email: str
+    professionList: list[int] = []
+    hobbyList: list[int] = []

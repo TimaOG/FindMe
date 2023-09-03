@@ -11,7 +11,7 @@ con = psycopg2.connect(
 )
 
 
-def db_create_user(data: RegData):
+def db_create_user(data: RegDataRequest):
     cur = con.cursor()
     cur.execute('''INSERT INTO Users (fio,userLogin, userPassword,birthdate, sex, email) 
         VALUES (%s, %s, %s, %s, %s, %s)''', (data.fio, data.login,
@@ -32,7 +32,7 @@ def db_check_user_in_system_by_email_and_login(email: str, login: str):
         return [False, 'Login already exist']
     return [True, '']
 
-def db_check_user_in_system(data: LoginData):
+def db_check_user_in_system(data: LoginDataRequest):
     cur = con.cursor()
     cur.execute('''SELECT id, userPassword FROM Users WHERE email=%s''', (data.email, ))
     res = cur.fetchone()
@@ -60,6 +60,24 @@ def db_get_user_info(user_id: int):
                         professionList=getListFromTuple(user_prof_list), hobbyList=getListFromTuple(user_hobby_list))
     # print(user)
     return user
+
+def db_save_user_info(userInfo: UserRequest, user_id: int):
+    cur = con.cursor()
+    cur.execute('''UPDATE Users SET description=%s, achievements=%s, education=%s, email=%s WHERE id=%s''',
+                 (userInfo.description, userInfo.achievements, userInfo.education, userInfo.email, user_id))
+    con.commit()
+    cur.execute('''DELETE UserHobbyList WHERE fkUser=%s''', (user_id,))
+    con.commit()
+    for hobby_id in userInfo.hobbyList:
+        cur.execute('''INSERT INTO UserHobbyList (fkUser, fkHobby) VALUES(%s, %s)''', (user_id, hobby_id))
+        con.commit()
+    cur.execute('''DELETE UserProfessionList WHERE fkUser=%s''', (user_id,))
+    con.commit()
+    for prof_id in userInfo.hobbyList:
+        cur.execute('''INSERT INTO UserProfessionList (fkUser, fkProfession) VALUES(%s, %s) 
+                    ON CONFLICT(fkProfession) DO NOTHING''', (user_id, prof_id))
+        con.commit()
+    cur.close()
 
 def getListFromTuple(tup):
     res = []
