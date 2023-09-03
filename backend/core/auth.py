@@ -44,14 +44,14 @@ async def register_user(data:RegDataRequest):
     if(not checker[0]):
         return {'header': 'Fail', 'msg': checker[1]}
     db_create_user(data)
-    return {'header': 'OK', 'msg': 'Success'}
+    return {'header': 'OK', 'msg': ''}
 
 @router.post("/login", response_model=BaseResponse, tags=["Auth"])
 async def login_user(request: Request, response: Response, data:LoginDataRequest):
     checkData = db_check_user_in_system(data)
     if not checkData[0]:
         return {'header': 'Fail', 'msg': 'User does not exist'}
-    jwt_token = create_token({"id": 1})
+    jwt_token = create_token({"id": checkData[2]})
     if pwd_context.verify(data.password, checkData[1]):
         response.set_cookie(key="token", value=jwt_token)
         return {'header': 'OK', 'msg': ''}

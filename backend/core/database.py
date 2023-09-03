@@ -1,6 +1,10 @@
 import psycopg2
 from core.requestsModels import *
 from core.responseModels import *
+from passlib.context import CryptContext
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 con = psycopg2.connect(
   database="fm", 
@@ -39,7 +43,7 @@ def db_check_user_in_system(data: LoginDataRequest):
     cur.close()
     if res[0] == None:
         return [False, '']
-    return [True, res[1]]
+    return [True, res[1], res[0]]
 
 
 def db_get_user_info(user_id: int):
@@ -63,20 +67,42 @@ def db_get_user_info(user_id: int):
 
 def db_save_user_info(userInfo: UserRequest, user_id: int):
     cur = con.cursor()
-    cur.execute('''UPDATE Users SET description=%s, achievements=%s, education=%s, email=%s WHERE id=%s''',
-                 (userInfo.description, userInfo.achievements, userInfo.education, userInfo.email, user_id))
+    cur.execute('''UPDATE Users SET description=%s, achievements=%s, education=%s WHERE id=%s''',
+                 (userInfo.description, userInfo.achievements, userInfo.education, user_id))
     con.commit()
-    cur.execute('''DELETE UserHobbyList WHERE fkUser=%s''', (user_id,))
+    cur.execute('''DELETE FROM UserHobbyList WHERE fkUser=%s''', (user_id,))
     con.commit()
     for hobby_id in userInfo.hobbyList:
-        cur.execute('''INSERT INTO UserHobbyList (fkUser, fkHobby) VALUES(%s, %s)''', (user_id, hobby_id))
+        cur.execute('''INSERT INTO UserHobbyList (fkUser, fkHobby) VALUES(%s, %s) 
+                    ON CONFLICT(fkHobby) DO NOTHING''', (user_id, hobby_id))
         con.commit()
-    cur.execute('''DELETE UserProfessionList WHERE fkUser=%s''', (user_id,))
+    cur.execute('''DELETE FROM UserProfessionList WHERE fkUser=%s''', (user_id,))
     con.commit()
     for prof_id in userInfo.hobbyList:
         cur.execute('''INSERT INTO UserProfessionList (fkUser, fkProfession) VALUES(%s, %s) 
                     ON CONFLICT(fkProfession) DO NOTHING''', (user_id, prof_id))
         con.commit()
+    cur.close()
+
+def db_save_user_settings(userInfo: UserSettingsRequest, user_id: int):
+    cur = con.cursor()
+    print(user_id)
+    cur.execute('''SELECT userPassword FROM Users WHERE id=%s''', (user_id,))
+    oldPassword = cur.fetchone()
+    print(oldPassword)
+    if pwd_context.verify(userInfo.password2, oldPassword[0]):
+        cur.close()
+        return False
+    cur.execute('''UPDATE Users SET email=%s, userPassword=%s, userLogin=%s WHERE id=%s''',
+                 (userInfo.email, userInfo.password, userInfo.login, user_id))
+    con.commit()
+    cur.close()
+    return True
+
+def db_delete_user(user_id: int):
+    cur = con.cursor()
+    cur.execute('''DELETE FROM Users WHERE id=%s''', (user_id,))
+    con.commit()
     cur.close()
 
 def getListFromTuple(tup):

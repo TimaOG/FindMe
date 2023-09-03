@@ -19,6 +19,12 @@ class UserRequest(BaseModel):
     description: str
     achievements: str
     education: str
-    email: str
     professionList: list[int] = []
     hobbyList: list[int] = []
+
+class UserSettingsRequest(BaseModel):
+    login: str
+    email: str
+    password: str
+    password2: str
+    oldpassword: str
