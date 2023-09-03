@@ -86,10 +86,8 @@ def db_save_user_info(userInfo: UserRequest, user_id: int):
 
 def db_save_user_settings(userInfo: UserSettingsRequest, user_id: int):
     cur = con.cursor()
-    print(user_id)
     cur.execute('''SELECT userPassword FROM Users WHERE id=%s''', (user_id,))
     oldPassword = cur.fetchone()
-    print(oldPassword)
     if pwd_context.verify(userInfo.password2, oldPassword[0]):
         cur.close()
         return False
