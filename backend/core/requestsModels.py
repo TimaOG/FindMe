@@ -28,3 +28,10 @@ class UserSettingsRequest(BaseModel):
     password: str
     password2: str
     oldpassword: str
+
+class ProjectListRequest(BaseModel):
+    login: str
+    email: str
+    password: str
+    password2: str
+    oldpassword: str
