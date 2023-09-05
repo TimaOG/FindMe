@@ -11,9 +11,11 @@ class RegDataRequest(BaseModel):
     sex: bool
     birthdate: date
 
+
 class LoginDataRequest(BaseModel):
     email: str
     password: str
+
 
 class UserRequest(BaseModel):
     description: str
@@ -22,12 +24,14 @@ class UserRequest(BaseModel):
     professionList: list[int] = []
     hobbyList: list[int] = []
 
+
 class UserSettingsRequest(BaseModel):
     login: str
     email: str
     password: str
     password2: str
     oldpassword: str
+
 
 class ProjectListRequest(BaseModel):
     login: str

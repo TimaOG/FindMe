@@ -1,17 +1,16 @@
 import psycopg2
-from core.requestsModels import *
-from core.responseModels import *
+from .requestsModels import *
+from .responseModels import *
 from passlib.context import CryptContext
-
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 con = psycopg2.connect(
-  database="fm", 
-  user="postgres", 
-  password="123", 
-  host="127.0.0.1", 
-  port="5432"
+    database="fm",
+    user="postgres",
+    password="123",
+    host="127.0.0.1",
+    port="5432"
 )
 
 
@@ -23,11 +22,12 @@ def db_create_user(data: RegDataRequest):
     con.commit()
     cur.close()
 
+
 def db_check_user_in_system_by_email_and_login(email: str, login: str):
     cur = con.cursor()
     cur.execute('''SELECT id FROM Users WHERE email=%s''', (email,))
     resEmail = cur.fetchone()
-    cur.execute('''SELECT id FROM Users WHERE userLogin=%s''', (login, ))
+    cur.execute('''SELECT id FROM Users WHERE userLogin=%s''', (login,))
     resLogin = cur.fetchone()
     cur.close()
     if resEmail != None:
@@ -36,9 +36,10 @@ def db_check_user_in_system_by_email_and_login(email: str, login: str):
         return [False, 'Login already exist']
     return [True, '']
 
+
 def db_check_user_in_system(data: LoginDataRequest):
     cur = con.cursor()
-    cur.execute('''SELECT id, userPassword FROM Users WHERE email=%s''', (data.email, ))
+    cur.execute('''SELECT id, userPassword FROM Users WHERE email=%s''', (data.email,))
     res = cur.fetchone()
     cur.close()
     if res[0] == None:
@@ -48,8 +49,9 @@ def db_check_user_in_system(data: LoginDataRequest):
 
 def db_get_user_info(user_id: int):
     cur = con.cursor()
-    cur.execute('''SELECT fio, birthdate::text, sex, description, achievements, education, email FROM Users WHERE id=%s''',
-                (user_id,))
+    cur.execute(
+        '''SELECT fio, birthdate::text, sex, description, achievements, education, email FROM Users WHERE id=%s''',
+        (user_id,))
     user_info = cur.fetchone()
     cur.execute('''SELECT t1.professionname FROM Profession t1 LEFT JOIN UserProfessionList t2 
                         ON t2.fkprofession = t1.id WHERE t2.fkuser = %s''', (user_id,))
@@ -59,16 +61,18 @@ def db_get_user_info(user_id: int):
         (user_id,))
     user_hobby_list = cur.fetchall()
     cur.close()
-    user = UserResponse(fio=user_info[0], birthdate=user_info[1], sex=user_info[2], description=user_info[3], 
-                        achievements=user_info[4], education=user_info[5], email=user_info[6], 
-                        professionList=getListFromTuple(user_prof_list), hobbyList=getListFromTuple(user_hobby_list))
+    user = UserResponse(fio=user_info[0], birthdate=user_info[1], sex=user_info[2], description=user_info[3],
+                        achievements=user_info[4], education=user_info[5], email=user_info[6],
+                        professionList=db_get_list_from_tuple(user_prof_list),
+                        hobbyList=db_get_list_from_tuple(user_hobby_list))
     # print(user)
     return user
+
 
 def db_save_user_info(userInfo: UserRequest, user_id: int):
     cur = con.cursor()
     cur.execute('''UPDATE Users SET description=%s, achievements=%s, education=%s WHERE id=%s''',
-                 (userInfo.description, userInfo.achievements, userInfo.education, user_id))
+                (userInfo.description, userInfo.achievements, userInfo.education, user_id))
     con.commit()
     cur.execute('''DELETE FROM UserHobbyList WHERE fkUser=%s''', (user_id,))
     con.commit()
@@ -84,6 +88,7 @@ def db_save_user_info(userInfo: UserRequest, user_id: int):
         con.commit()
     cur.close()
 
+
 def db_save_user_settings(userInfo: UserSettingsRequest, user_id: int):
     cur = con.cursor()
     cur.execute('''SELECT userPassword FROM Users WHERE id=%s''', (user_id,))
@@ -92,10 +97,11 @@ def db_save_user_settings(userInfo: UserSettingsRequest, user_id: int):
         cur.close()
         return False
     cur.execute('''UPDATE Users SET email=%s, userPassword=%s, userLogin=%s WHERE id=%s''',
-                 (userInfo.email, userInfo.password, userInfo.login, user_id))
+                (userInfo.email, userInfo.password, userInfo.login, user_id))
     con.commit()
     cur.close()
     return True
+
 
 def db_delete_user(user_id: int):
     cur = con.cursor()
@@ -103,8 +109,25 @@ def db_delete_user(user_id: int):
     con.commit()
     cur.close()
 
-def getListFromTuple(tup):
+
+def db_get_list_from_tuple(tup):
     res = []
     for el in tup:
         res.append(el[0])
     return res
+
+
+def db_get_project_info(user_id: int):
+    cur = con.cursor()
+    cur.execute('''SELECT projectname, target, readystate, description, achievements, education, photolink,
+                presentationlink WHERE fkuserowner=%s''', (user_id,))
+    project_info = cur.fetchone()
+    cur.commit()
+    info = ProjectInfoResponse(projectnane=project_info[0], target=project_info[1], readystate=project_info[2],
+                               description=project_info[3], achievements=project_info[4], education=project_info[5],
+                               photolink=project_info[6], presentationlink=project_info[7])
+    return info
+
+
+def db_get_project_list():
+    pass

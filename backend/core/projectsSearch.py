@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Response, Request
-from core.responseModels import BaseResponse, UserResponse
-from core.requestsModels import UserRequest, UserSettingsRequest
-from core.auth import verify_token, pwd_context
-from core.database import db_get_user_info, db_save_user_info, db_delete_user, db_save_user_settings
+from .responseModels import BaseResponse, UserResponse
+from .requestsModels import UserRequest, UserSettingsRequest
+from .auth import verify_token, pwd_context
+from .database import db_get_user_info, db_save_user_info, db_delete_user, db_save_user_settings
+
 router = APIRouter()
 
 
