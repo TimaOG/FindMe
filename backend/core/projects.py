@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Response, Request
-from core.responseModels import BaseResponse, UserResponse
-from core.requestsModels import UserRequest, UserSettingsRequest
-from core.auth import verify_token, pwd_context
-from core.database import db_get_user_info, db_save_user_info, db_delete_user, db_save_user_settings
+from responseModels import BaseResponse, UserResponse
+from requestsModels import UserRequest, UserSettingsRequest
+from auth import verify_token, pwd_context
+from database import db_get_user_info, db_save_user_info, db_delete_user, db_save_user_settings
+
 router = APIRouter()
 
 
@@ -15,10 +16,12 @@ def get_projects_list(page: int):
 def get_project_info(id: int):
     pass
 
+
 @router.put("/projects/editProject/{id}", response_model=UserResponse, tags=["Projects"])
-def get_project_info(id: int):
+def edit_project(id: int):
     pass
 
+
 @router.delete("/projects/deleteProject/{id}", response_model=UserResponse, tags=["Projects"])
-def get_project_info(id: int):
+def delete_project(id: int):
     pass
