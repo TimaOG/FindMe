@@ -3,9 +3,10 @@ import jwt
 from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from requestsModels import RegDataRequest, LoginDataRequest
-from responseModels import BaseResponse
-from database import db_create_user, db_check_user_in_system_by_email_and_login, db_check_user_in_system
+from .requestsModels import RegDataRequest, LoginDataRequest
+from .responseModels import BaseResponse
+from .database import db_create_user, db_check_user_in_system_by_email_and_login, db_check_user_in_system
+
 
 SECRET_KEY = "my_secret_key"
 ALGORITHM = "HS256"

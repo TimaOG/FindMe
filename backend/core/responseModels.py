@@ -28,3 +28,23 @@ class UserResponse(BaseModel):
     email: str
     professionList: list[str] = []
     hobbyList: list[str] = []
+
+
+class ProjectInfoResponse(BaseModel):
+    projectnane: str
+    target: str
+    readystate: int
+    description: str
+    achievements: str
+    education: str
+    photolink: str
+    presentationlink: str
+
+
+class ProjectListResponse(BaseModel):
+    projectnane: str
+    target: str
+    readystate: int
+    photolink: str
+
+

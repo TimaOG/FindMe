@@ -1,6 +1,6 @@
 import psycopg2
-from requestsModels import *
-from responseModels import *
+from .requestsModels import *
+from .responseModels import *
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -63,7 +63,8 @@ def db_get_user_info(user_id: int):
     cur.close()
     user = UserResponse(fio=user_info[0], birthdate=user_info[1], sex=user_info[2], description=user_info[3],
                         achievements=user_info[4], education=user_info[5], email=user_info[6],
-                        professionList=getListFromTuple(user_prof_list), hobbyList=getListFromTuple(user_hobby_list))
+                        professionList=db_get_list_from_tuple(user_prof_list),
+                        hobbyList=db_get_list_from_tuple(user_hobby_list))
     # print(user)
     return user
 
@@ -109,8 +110,24 @@ def db_delete_user(user_id: int):
     cur.close()
 
 
-def getListFromTuple(tup):
+def db_get_list_from_tuple(tup):
     res = []
     for el in tup:
         res.append(el[0])
     return res
+
+
+def db_get_project_info(user_id: int):
+    cur = con.cursor()
+    cur.execute('''SELECT projectname, target, readystate, description, achievements, education, photolink,
+                presentationlink WHERE fkuserowner=%s''', (user_id,))
+    project_info = cur.fetchone()
+    cur.commit()
+    info = ProjectInfoResponse(projectnane=project_info[0], target=project_info[1], readystate=project_info[2],
+                               description=project_info[3], achievements=project_info[4], education=project_info[5],
+                               photolink=project_info[6], presentationlink=project_info[7])
+    return info
+
+
+def db_get_project_list():
+    pass
