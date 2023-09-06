@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
-from core import auth, account, projects, projectsSearch
+from core import auth, account, projects, projectsSearch, userSearch
 from core.responseModels import RootInfoResponse
 
 app = FastAPI()
@@ -9,6 +9,7 @@ app.include_router(auth.router)
 app.include_router(account.router)
 app.include_router(projects.router)
 app.include_router(projectsSearch.router)
+app.include_router(userSearch.router)
 
 
 @app.get("/", response_model=RootInfoResponse, tags=["RootLoadInfo"])

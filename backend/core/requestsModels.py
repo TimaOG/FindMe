@@ -39,3 +39,9 @@ class ProjectListRequest(BaseModel):
     password: str
     password2: str
     oldpassword: str
+
+class AddProjectRequest(BaseModel):
+    projectName: str
+    target: str
+    readyState: int
+    description: str

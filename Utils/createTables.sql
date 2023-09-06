@@ -49,8 +49,6 @@ CREATE TABLE Projects (
 	target varchar,
 	readyState int2,
 	description varchar,
-	achievements varchar,
-	education varchar,
 	fkUserOwner serial4,
 	photoLink varchar,
 	presentationLink varchar, 

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Response, Request
 from .responseModels import BaseResponse, UserResponse, ProjectInfoResponse
-from .requestsModels import UserRequest, UserSettingsRequest
+from .requestsModels import AddProjectRequest
 from .auth import verify_token, pwd_context
-from .database import db_get_user_info, db_save_user_info, db_delete_user, db_save_user_settings, db_get_project_info
+from .database import db_add_project, db_get_project_info
 
 router = APIRouter()
 
@@ -22,8 +22,11 @@ def get_project_info(request: Request):
 
 
 @router.get("/projects/addProject", response_model=ProjectInfoResponse, tags=["Projects"])
-def get_project_info(request: Request):
-    pass
+def get_project_info(request: Request, data: AddProjectRequest):
+    decoded_data = verify_token(request.cookies.get('token'))
+    if decoded_data is None:
+        return {'header': 'Fail', 'msg': 'Access denied'}
+    db_add_project(data, decoded_data['id'])
 
 
 @router.put("/projects/editProject/{id}", response_model=UserResponse, tags=["Projects"])

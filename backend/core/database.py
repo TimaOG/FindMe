@@ -128,6 +128,8 @@ def db_get_project_info(user_id: int):
                                photolink=project_info[6], presentationlink=project_info[7])
     return info
 
+def db_add_project(project: AddProjectRequest, user_id: int):
+    pass
 
 def db_get_project_list():
     pass
