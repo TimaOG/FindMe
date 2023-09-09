@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime, date
+from fastapi import FastAPI, UploadFile, File
 
 
 class RegDataRequest(BaseModel):

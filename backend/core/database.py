@@ -2,6 +2,8 @@ import psycopg2
 from .requestsModels import *
 from .responseModels import *
 from passlib.context import CryptContext
+import shutil
+from fastapi import FastAPI, UploadFile, File
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

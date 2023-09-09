@@ -7,9 +7,11 @@ s.cookies.clear()
 
 s.post('http://localhost:8000/login', json = {'email': 'gg@gg.ru', 'password': '111'})
 #gg = s.get('http://localhost:8000/account/getAccountInfo')
-# gg = s.put('http://localhost:8000/account/saveAccountInfo', json={'description': 'gang', 
-#     'achievements': 'никаких', 'education': 'два класса', 
-#     'email':'gg@gg.ru', 'professionList': [1], 'hobbyList': []})
+fp = open('C:\\Users\\Тимофей\\Pictures\\8-18.png', 'rb')
+files = {'file': fp}
+headers = {'Content-Type': 'multipart/form-data', 'accept': 'application/json'}
+gg = s.put('http://localhost:8000/account/saveAccountAvatar', files=files)
+fp.close()
 #gg = s.delete('http://localhost:8000/account/deleteAccount')
-gg = s.put('http://localhost:8000/account/saveAccountSettings', json={'login':'gang1', 'email': 'gg@gg.ru', 'password': '111', 'password2': '111', 'oldpassword': '123'})
+#gg = s.put('http://localhost:8000/account/saveAccountSettings', json={'login':'gang1', 'email': 'gg@gg.ru', 'password': '111', 'password2': '111', 'oldpassword': '123'})
 print(gg.text)
