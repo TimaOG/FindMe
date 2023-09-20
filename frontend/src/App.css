@@ -1,20 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Borel&family=Montserrat:wght@300&family=Roboto:ital,wght@1,300&display=swap');
+
 .BoxAuth{
   text-align: center;
   width: 550px;
-  height: 500px;
+  height: 550px;
   background: #D9D9D9;
   margin: 40px auto;
+  border-radius: 10px;
+  font-family: 'Anton', sans-serif;
 }
 
 .ImageLogo{
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  font-family: 'Anton', sans-serif;
 }
 
 .LogoBox{
-  padding: 10px;
+  padding: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-family: 'Anton', sans-serif;
 }
 
 .TextLogo{
+  font-size: 15px;
+  font-family: 'Anton', sans-serif;
+}
 
+.ContainerAuth{
+  margin: 40px auto;
+}
+
+.formRow{
+  width: 80%;
+  height: 40px;
+  border-radius: 10px;
+  background: #1A1D26;
+  color: white;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none !important;
+}
+
+::placeholder {
+  color: white;
+  font-size: 1.2em;
+  font-family: 'Anton', sans-serif;
+}
+
+.RowInputs{
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+  align-items: flex-start;
+  justify-content: center;
+  font-family: 'Anton', sans-serif;
+}
+
+.FormGroupInp{
+  margin-left: 13%;
+  font-family: 'Anton', sans-serif;
+}
+
+.pNamesReg{
+  padding: auto;
+  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Anton', sans-serif;
+}
+
+p{
+  margin: 0;
+  font-family: 'Anton', sans-serif;
+}
+
+.EmailText{
+  padding: 0px 0px 10px 0px;
+  font-family: 'Anton', sans-serif;
+}
+
+.PassText{
+  padding: 10px 0px 10px 0px;
+  font-family: 'Anton', sans-serif;
+}
+
+.SubmitForm{
+  margin-top: 15px;
+  width: 40%;
+  height: 40px;
+  border-radius: 10px;
+  background: #1A1D26;
+  color: white;
+  font-family: 'Anton', sans-serif;
+}
+
+.pNamesRegColor{
+  color: white;
+  font-family: 'Anton', sans-serif;
 }
