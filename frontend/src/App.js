@@ -1,24 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import  './App.css';
+import { NavigationContainer } from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Authorization from './component/Authorization'
+import Registration from './component/Registration';
+
+const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Authorization" component={Authorization} />
+        <Stack.Screen name="Registration" component={Registration} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

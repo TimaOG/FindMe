@@ -10,7 +10,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 con = psycopg2.connect(
     database="fm",
     user="postgres",
-    password="123",
+    password="",
     host="127.0.0.1",
     port="5432"
 )
