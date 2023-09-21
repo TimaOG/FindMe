@@ -56,12 +56,10 @@ function Authorization ({navigation}){
                                 <Button className='SubmitForm' type="submit">
                                     Sign In
                                 </Button>
-                            </Row>
-                            
+                            </Row>   
                         </Form>
                     </Row>
-                </Box>
-                
+                </Box>               
             </Container>
         );
 }

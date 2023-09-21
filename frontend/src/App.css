@@ -3,11 +3,12 @@
 .BoxAuth{
   text-align: center;
   width: 550px;
-  height: 550px;
+  height: auto;
   background: #D9D9D9;
   margin: 40px auto;
   border-radius: 10px;
   font-family: 'Anton', sans-serif;
+  padding-bottom: 20px;
 }
 
 .ImageLogo{
@@ -105,4 +106,10 @@ p{
 .pNamesRegColor{
   color: white;
   font-family: 'Anton', sans-serif;
+}
+
+:focus {outline: none !important;}
+::-moz-focus-outer, ::-moz-focus-inner {
+    border: 0px !important;
+    padding: 0;
 }
