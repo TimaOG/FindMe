@@ -10,7 +10,7 @@ class RegDataRequest(BaseModel):
     password2: str
     email: str
     sex: bool
-    birthdate: date
+    birthdate: str
 
 
 class LoginDataRequest(BaseModel):

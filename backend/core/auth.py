@@ -40,7 +40,8 @@ def verify_token(token: str):
 
 
 @router.post("/register", response_model=BaseResponse, tags=["Auth"])
-async def register_user(data: RegDataRequest):
+async def register_user(request: Request,data: RegDataRequest):
+    print('gg')
     if (data.password != data.password2):
         return {'header': 'Fail', 'msg': 'Incorect password'}
     data.password = pwd_context.hash(data.password)

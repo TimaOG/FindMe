@@ -2,8 +2,22 @@ from fastapi import FastAPI
 import uvicorn
 from core import auth, account, projects, projectsSearch, userSearch
 from core.responseModels import RootInfoResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+    "http://localhost:8000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(auth.router)
 app.include_router(account.router)
