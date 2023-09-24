@@ -29,21 +29,19 @@ function Registration({ navigation }) {
     };
     const handleSubmit = (event) => {
         event.preventDefault();
-            var r = JSON.stringify({
+            var dataForm = JSON.stringify({
                 birthdate: formData.birthdate,
                 fio: formData.fio,
                 login: formData.login,
                 password: formData.password,
                 password2: formData.password2,
                 email: formData.email,
-                sex: true
+                sex: formData.sex
             });
-            console.log(r);
-            console.log(formData)
             $.ajax({
                 url: 'http://localhost:8000/register',
                 type: 'POST',
-                data: r,
+                data: dataForm,
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
