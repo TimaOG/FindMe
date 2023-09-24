@@ -30,25 +30,21 @@ function Registration({ navigation }) {
     };
     const handleSubmit = (event) => {
         event.preventDefault();
-            // axios.post('http://localhost:8000/register', formData).then(response =>{
-            //     console.log(response.data);
-            // })
-            // .catch(error =>{
-            //     console.log(error);
-            // });
+            var r = JSON.stringify({
+                birthdate: formData.birthdate,
+                fio: formData.fio,
+                login: formData.login,
+                password: formData.password,
+                password2: formData.password2,
+                email: formData.email,
+                sex: true
+            });
+            console.log(r);
             console.log(formData)
             $.ajax({
                 url: 'http://localhost:8000/register',
                 type: 'POST',
-                data: JSON.stringify({
-                    fio: 'gang',
-                    login: 'gang',
-                    password: '123',
-                    password2: '123',
-                    email: 'gg@gg.ru',
-                    sex: true,
-                    birthdate: '2023-09-01'
-                }),
+                data: r,
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
@@ -132,4 +128,3 @@ function Registration({ navigation }) {
     }
 
     export default Registration;
-
