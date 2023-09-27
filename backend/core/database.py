@@ -98,7 +98,11 @@ def db_save_user_ava_info(fileName: str, user_id: int):
                 (fileName, user_id))
     con.commit()
     cur.close()
-    return oldAvaName[0]
+    if oldAvaName == None:
+        return None
+    else:
+        return oldAvaName[0]
+    
 
 def db_save_user_resume_info(fileName: str, user_id: int):
     cur = con.cursor()
@@ -108,7 +112,10 @@ def db_save_user_resume_info(fileName: str, user_id: int):
                 (fileName, user_id))
     con.commit()
     cur.close()
-    return oldAvaName[0]
+    if oldAvaName == None:
+        return None
+    else:
+        return oldAvaName[0]
 
 
 def db_save_user_settings(userInfo: UserSettingsRequest, user_id: int):

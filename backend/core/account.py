@@ -37,7 +37,10 @@ async def save_account_avatar(request: Request, file: UploadFile = File(...)):
     if not first_four_bytes[:2] in [b'\xff\xd8', b'\x89P', b'BM', b'II*\x00', b'MM\x00*']:
         return {'header': 'Fail', 'msg': 'File is not supported'}
     oldName = db_save_user_ava_info(file.filename, decoded_data['id'])
-    if oldName != '' or oldName != None:
+    print(oldName)
+    if not os.path.isdir('backend/core/files/user' + str(decoded_data['id'])):
+        os.mkdir('backend/core/files/user' + str(decoded_data['id']))
+    if oldName != '' and oldName != None:
         if os.path.isfile('backend/core/files/user' + str(decoded_data['id']) + '/' + oldName):
             os.remove('backend/core/files/user' + str(decoded_data['id']) + '/' + oldName)
     with open('backend/core/files/user' + str(decoded_data['id']) + '/' + file.filename, "wb") as buffer:
@@ -53,8 +56,10 @@ async def save_account_resume(request: Request, file: UploadFile = File(...)):
     await file.seek(0)
     if first_four_bytes != b'%PDF':
         return {'header': 'Fail', 'msg': 'File is not supported'}
+    if not os.path.isdir('backend/core/files/user' + str(decoded_data['id'])):
+        os.mkdir('backend/core/files/user' + str(decoded_data['id']))
     oldName = db_save_user_resume_info(file.filename, decoded_data['id'])
-    if oldName != '' or oldName != None:
+    if oldName != '' and oldName != None:
         if os.path.isfile('backend/core/files/user' + str(decoded_data['id']) + '/' + oldName):
             os.remove('backend/core/files/user' + str(decoded_data['id']) + '/' + oldName)
     with open('backend/core/files/user' + str(decoded_data['id']) + '/' + file.filename, "wb") as buffer:
