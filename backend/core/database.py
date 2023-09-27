@@ -44,7 +44,7 @@ def db_check_user_in_system(data: LoginDataRequest):
     cur.execute('''SELECT id, userPassword FROM Users WHERE email=%s''', (data.email,))
     res = cur.fetchone()
     cur.close()
-    if res[0] == None:
+    if res == None:
         return [False, '']
     return [True, res[1], res[0]]
 
@@ -89,6 +89,26 @@ def db_save_user_info(userInfo: UserRequest, user_id: int):
                     ON CONFLICT(fkProfession) DO NOTHING''', (user_id, prof_id))
         con.commit()
     cur.close()
+
+def db_save_user_ava_info(fileName: str, user_id: int):
+    cur = con.cursor()
+    cur.execute('''SELECT avaLink FROM Users WHERE id=%s''', (user_id,))
+    oldAvaName = cur.fetchone()
+    cur.execute('''UPDATE Users SET avaLink=%s WHERE id=%s''',
+                (fileName, user_id))
+    con.commit()
+    cur.close()
+    return oldAvaName[0]
+
+def db_save_user_resume_info(fileName: str, user_id: int):
+    cur = con.cursor()
+    cur.execute('''SELECT resumeLink FROM Users WHERE id=%s''', (user_id,))
+    oldAvaName = cur.fetchone()
+    cur.execute('''UPDATE Users SET resumeLink=%s WHERE id=%s''',
+                (fileName, user_id))
+    con.commit()
+    cur.close()
+    return oldAvaName[0]
 
 
 def db_save_user_settings(userInfo: UserSettingsRequest, user_id: int):

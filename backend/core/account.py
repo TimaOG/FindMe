@@ -2,9 +2,10 @@ from fastapi import APIRouter, Response, Request
 from .responseModels import BaseResponse, UserResponse
 from .requestsModels import UserRequest, UserSettingsRequest
 from .auth import verify_token, pwd_context
-from .database import db_get_user_info, db_save_user_info, db_delete_user, db_save_user_settings
+from .database import db_get_user_info, db_save_user_info, db_delete_user, db_save_user_settings, db_save_user_ava_info, db_save_user_resume_info
 from fastapi import FastAPI, UploadFile, File
 import shutil
+import os
 
 router = APIRouter()
 
@@ -31,17 +32,33 @@ async def save_account_avatar(request: Request, file: UploadFile = File(...)):
     decoded_data = verify_token(request.cookies.get('token'))
     if decoded_data is None:
         return {'header': 'Fail', 'msg': 'Access denied'}
-    print(file.filename)
-    with open(file.filename, "wb") as buffer:
+    first_four_bytes = await file.read(8)
+    await file.seek(0)
+    if not first_four_bytes[:2] in [b'\xff\xd8', b'\x89P', b'BM', b'II*\x00', b'MM\x00*']:
+        return {'header': 'Fail', 'msg': 'File is not supported'}
+    oldName = db_save_user_ava_info(file.filename, decoded_data['id'])
+    if oldName != '' or oldName != None:
+        if os.path.isfile('backend/core/files/user' + str(decoded_data['id']) + '/' + oldName):
+            os.remove('backend/core/files/user' + str(decoded_data['id']) + '/' + oldName)
+    with open('backend/core/files/user' + str(decoded_data['id']) + '/' + file.filename, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     return {'header': 'OK', 'msg': ''}
 
 @router.put("/account/saveAccountResume", response_model=BaseResponse, tags=["Account"])
-async def save_account_resume(request: Request, data: UploadFile):
+async def save_account_resume(request: Request, file: UploadFile = File(...)):
     decoded_data = verify_token(request.cookies.get('token'))
     if decoded_data is None:
         return {'header': 'Fail', 'msg': 'Access denied'}
-    db_save_user_info(data, decoded_data['id'])
+    first_four_bytes = await file.read(4)
+    await file.seek(0)
+    if first_four_bytes != b'%PDF':
+        return {'header': 'Fail', 'msg': 'File is not supported'}
+    oldName = db_save_user_resume_info(file.filename, decoded_data['id'])
+    if oldName != '' or oldName != None:
+        if os.path.isfile('backend/core/files/user' + str(decoded_data['id']) + '/' + oldName):
+            os.remove('backend/core/files/user' + str(decoded_data['id']) + '/' + oldName)
+    with open('backend/core/files/user' + str(decoded_data['id']) + '/' + file.filename, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
     return {'header': 'OK', 'msg': ''}
 
 
