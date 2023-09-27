@@ -12,6 +12,8 @@ SECRET_KEY = "my_secret_key"
 ALGORITHM = "HS256"
 EXPIRATION_TIME = timedelta(minutes=30)
 
+SALT = "THISISSALTAHAHHAHAHAHALOLKEKMEM"
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 router = APIRouter()
@@ -40,10 +42,11 @@ def verify_token(token: str):
 
 
 @router.post("/register", response_model=BaseResponse, tags=["Auth"])
-async def register_user(data: RegDataRequest):
+async def register_user(request: Request,data: RegDataRequest):
+    print('gg')
     if (data.password != data.password2):
         return {'header': 'Fail', 'msg': 'Incorect password'}
-    data.password = pwd_context.hash(data.password)
+    data.password = pwd_context.hash(data.password + SALT)
     checker = db_check_user_in_system_by_email_and_login(data.email, data.login)
     if (not checker[0]):
         return {'header': 'Fail', 'msg': checker[1]}
@@ -57,7 +60,7 @@ async def login_user(request: Request, response: Response, data: LoginDataReques
     if not checkData[0]:
         return {'header': 'Fail', 'msg': 'User does not exist'}
     jwt_token = create_token({"id": checkData[2]})
-    if pwd_context.verify(data.password, checkData[1]):
+    if pwd_context.verify(data.password + SALT, checkData[1]):
         response.set_cookie(key="token", value=jwt_token)
         return {'header': 'OK', 'msg': ''}
     return {'header': 'Fail', 'msg': 'Password is wrong'}
